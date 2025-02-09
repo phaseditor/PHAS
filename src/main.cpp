@@ -10,9 +10,7 @@ int main(int argc, char* argv[]) {
 
     const char* file_path = argv[1];
 
-    std::cout << file_path << std::endl;
-    ReadFile *new_file;
-    new_file = new ReadFile(file_path);
-    new_file->printFile();
-    delete new_file;
+    std::string file_content = readFile(file_path);
+    Rope rope(file_content, 32);
+    rope.display();
 }

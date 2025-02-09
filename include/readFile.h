@@ -2,17 +2,35 @@
 #define READFILE_H
 
 #include <cstdio>
+#include <string>
+#include <vector>
 
-class ReadFile {
+std::string readFile (const std::string& );
+
+class RopeNode {
 public:
-  ReadFile(const char *);
-  void printFile();
-  ~ReadFile();
+  bool isLeaf;
+  RopeNode *left;
+  RopeNode *right;
+  std::string data;
+  int weight;
 
+  RopeNode(std::string);
+  RopeNode(RopeNode *, RopeNode *);
+};
+
+class Rope {
 private:
-  const char *file_path = "";
-  FILE *file;
-  char buffer[100];
+  RopeNode *root;
+
+public:
+  Rope();
+  Rope(std::string, int);
+  RopeNode* buildTree(std::vector<RopeNode*>&, int, int);
+  RopeNode *getRoot() const;
+
+  void display(RopeNode *);
+  void display();
 };
 
 #endif // READFILE_H
