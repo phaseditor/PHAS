@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <iostream>
 #include <ncurses.h>
+#include <algorithm>
 #include "readFile.h"
 
 void DisplayNcurses(const std::string& file_content) {
@@ -21,7 +22,7 @@ void DisplayNcurses(const std::string& file_content) {
     mvwprintw(win, 0, top_border, "[PHASE]");
     wrefresh(win);
 
-    int pad_height = file_content.size() / (max_X - 2) + 1; 
+    int pad_height = std::count(file_content.begin(), file_content.end(), '\n') + 1;
     if (pad_height < max_Y - 2) pad_height = max_Y - 2;
 
     WINDOW *pad = newpad(pad_height, max_X - 2); // initialize pad (for scrolling)
