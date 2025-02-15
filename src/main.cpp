@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <iostream>
-#include "readFile.h"
+#include "phaseEditor.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
@@ -9,8 +9,14 @@ int main(int argc, char* argv[]) {
     }
 
     const char* file_path = argv[1];
-
     std::string file_content = readFile(file_path);
-    Rope rope(file_content, 32);
-    rope.display();
+
+    Editor phase(file_content);
+
+    EditFile(phase);
+
+    //if(save file condition)
+    //SaveFile(phase);
+
+    return 0;
 }
