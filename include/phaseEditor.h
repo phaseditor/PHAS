@@ -19,6 +19,7 @@ class Editor {
 
     private :
         int max_X, max_Y; // Y = Row && X = Col
+        int cursor_X, cursor_Y; // cursor position
         int pad_height;
         int top_border;
         int vertical_offset;
