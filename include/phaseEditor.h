@@ -14,7 +14,7 @@ class Editor {
         void InitEditor();
         void InitWindows();
         void RefreshPad();
-        void HandleScrolling();
+        void GetKey();
         void Terminate();
 
     private :
@@ -24,6 +24,8 @@ class Editor {
         int top_border;
         int vertical_offset;
         int visible_lines;
+        bool insertmode;
+        std::string keylog;
 
         std::string fileContent;
 

@@ -4,7 +4,7 @@ void EditFile(Editor& phase) {
     phase.InitEditor();
     phase.InitWindows();
     phase.RefreshPad();
-    phase.HandleScrolling();
+    phase.GetKey();
     phase.Terminate();
 }
 
@@ -19,8 +19,9 @@ void Editor::InitEditor() {
     curs_set(1);
     getmaxyx(stdscr, max_Y, max_X);
     vertical_offset = 0; // position for scroll (horizontal scrolling not implemented yet)
-    cursor_Y = 0;
-    cursor_X = 0;
+    cursor_Y, cursor_X = 0; // cursor position
+    keylog = "";
+    insertmode = 0;
     refresh();
 }
 
@@ -54,34 +55,74 @@ void Editor::RefreshPad() {
     prefresh(pad, vertical_offset, 0, 1, 0, max_Y - 2, max_X - 2);
 }
 
-void Editor::HandleScrolling() {
+void Editor::GetKey() {
     while (true) {
         int key = wgetch(stdscr);
-        if (key == 'q') break;
+        if (key == 27) break; // escape key
 
-        // Handle scrolling
-        if (key == KEY_DOWN) {
-            if (cursor_Y < pad_height - 1) {
-                cursor_Y++; // Move cursor down in the pad
-            }
-            if (cursor_Y >= vertical_offset + visible_lines) {
-                vertical_offset++; // Scroll down
-            }
-        }
-        if (key == KEY_UP) {
-            if (cursor_Y > 0) {
-                cursor_Y--; // Move cursor up in the pad
-            }
-            if (cursor_Y < vertical_offset) {
-                vertical_offset--; // Scroll up
-            }
-        }
+        switch (key) {
+            case KEY_DOWN:
+                if (cursor_Y < pad_height - 1) {
+                    cursor_Y++; // Move cursor down in the pad
+                }
+                if (cursor_Y >= vertical_offset + visible_lines) {
+                    vertical_offset++; // Scroll down
+                }
+                break;
 
-        if (key == KEY_LEFT && cursor_X > 0) { // left movement of the cursor
-            cursor_X--;
-        }
-        if (key == KEY_RIGHT && cursor_X < max_X - 3) { // right movement of the cursor
-            cursor_X++;
+            case KEY_UP:
+                if (cursor_Y > 0) {
+                    cursor_Y--; // Move cursor up in the pad
+                }
+                if (cursor_Y < vertical_offset) {
+                    vertical_offset--; // Scroll up
+                }
+                break;
+
+            case KEY_LEFT:
+                if (cursor_X > 0) {
+                    cursor_X--; // Move cursor left
+                }
+                break;
+
+            case KEY_RIGHT:
+                if (cursor_X < max_X - 3) {
+                    cursor_X++; // Move cursor right
+                }
+                break;
+
+            case KEY_BACKSPACE:
+                if (!insertmode) {
+                    if (cursor_X >= 0) {
+                        cursor_X--;
+                        wdelch(pad);
+                        cursor_X++;
+                    } else if (cursor_Y > 0) {
+                        cursor_Y--;
+                        cursor_X = max_X - 3; 
+                        wdelch(pad);
+                    }
+                }
+                break;
+
+            case KEY_IC:
+                insertmode = !insertmode;
+
+            default:
+                if (!insertmode) {
+                    if (isprint(key)) {
+                        mvwprintw(pad, cursor_Y, cursor_X, "%c", char(key));
+                        keylog += char(key);
+                        cursor_X++; // move cursor to right after printing each letter
+
+                        if (cursor_X >= max_X - 2) { // go to the next line if current line finishes
+                            cursor_X = 0;
+                            cursor_Y++;
+                        }
+                        // scroll after the pad height finishes (not implemented yet)
+                    }
+                }
+                break;
         }
 
         RefreshPad();
