@@ -37,7 +37,7 @@ Phase is built to provide a clean and efficient text-editing experience, with a 
    cd PHASE/build
 3. Build the project:
    ```bash
-   make
+   cmake .. && make
 4. Run the text editor:
    ```bash
    ./phase [File you want to view]
