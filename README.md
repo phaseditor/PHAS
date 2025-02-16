@@ -42,3 +42,11 @@ Phase is built to provide a clean and efficient text-editing experience, with a 
    ```bash
    ./phase [File you want to view]
   
+---
+
+## License
+Phase is open-source software licensed under the **MIT License**. Feel free to use, modify, and distribute it as per the terms of the license.
+
+---
+
+Thank you for checking out Phase! We hope you enjoy using it as much as we enjoyed building it. If you have any questions, suggestions, or feedback, feel free to open an issue or reach out to us. Happy coding! 🚀
